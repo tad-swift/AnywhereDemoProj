@@ -50,7 +50,6 @@ final class DetailController: UIViewController {
     }
     
     func setupUI() {
-        
         if let iconURL = cast?.icon?.url, let firstURL = cast?.firstURL {
             downloadImage(url: URL(string: "\(firstURL)\(iconURL)")!) { image in
                 if let image {
@@ -80,7 +79,6 @@ final class DetailController: UIViewController {
     
     func downloadImage(url: URL, completion: @escaping (UIImage?) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
-            print("DATA ", data)
             if let data {
                 let image = UIImage(data: data)
                 completion(image)
