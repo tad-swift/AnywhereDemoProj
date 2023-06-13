@@ -26,8 +26,6 @@ final class DetailController: UIViewController {
         return v
     }()
     
-    private var imageOperation: BlockOperation?
-    
     var url: URL?
     
     init(title: String, cast: RelatedTopic?, url: URL?) {
@@ -48,13 +46,13 @@ final class DetailController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        imageOperation?.cancel()
+        
     }
     
     func setupUI() {
         
-        if let urlstring = cast?.icon?.url {
-            downloadImage(url: URL(string: "https://api.duckduckgo.com/?q=the+wire+characters&format=json\(urlstring)")!) { image in
+        if let iconURL = cast?.icon?.url, let firstURL = cast?.firstURL {
+            downloadImage(url: URL(string: "\(firstURL)\(iconURL)")!) { image in
                 if let image {
                     DispatchQueue.main.async {
                         self.imageView.image = image
@@ -63,7 +61,9 @@ final class DetailController: UIViewController {
             }
         }
         view.backgroundColor = .white
-        textView.text = cast?.text ?? ""
+        var strings = cast?.text.components(separatedBy: "-")
+        strings?.remove(at: 0)
+        textView.text = strings?.joined(separator: "-")
         view.addSubviews(imageView, textView)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
@@ -80,13 +80,14 @@ final class DetailController: UIViewController {
     
     func downloadImage(url: URL, completion: @escaping (UIImage?) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
-            print(response)
+            print("DATA ", data)
             if let data {
-                completion(UIImage(data: data))
+                let image = UIImage(data: data)
+                completion(image)
             } else {
                 completion(nil)
             }
-        }
+        }.resume()
     }
     
 }

@@ -16,7 +16,7 @@ struct CharacterData: Codable {
 }
 
 struct RelatedTopic: Codable {
-    let firstURL: String?
+    let firstURL: String
     let icon: Icon?
     let result: String
     let text: String
