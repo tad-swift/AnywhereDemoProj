@@ -65,7 +65,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = viewModel.showingChars[indexPath.item]
-        let vc = DetailController(title: "Character Info", cast: item)
+        let vc = DetailController(title: "Character Info", cast: item, url: viewModel.dataProvider.requestBuilder.finalURL)
         showDetailViewController(vc, sender: self)
         tableView.deselectRow(at: indexPath, animated: true)
     }

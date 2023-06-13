@@ -8,7 +8,7 @@ import Foundation
 
 final class CharacterDataProvider<T: RequestBuilder, V: NetworkService> {
     
-    private var requestBuilder: T
+    var requestBuilder: T
     private var networkService: V
     
     init(requestBuilder: T, networkService: V = URLSession.shared) {

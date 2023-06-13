@@ -11,7 +11,7 @@ class SplitViewController: UISplitViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewControllers = [MainViewController(), DetailController(title: "Character Detail", cast: nil)]
+        viewControllers = [MainViewController(), DetailController(title: "Character Detail", cast: nil, url: nil)]
         preferredDisplayMode = .oneBesideSecondary
     }
     

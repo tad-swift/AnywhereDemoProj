@@ -30,7 +30,10 @@ struct RelatedTopic: Codable {
 }
 
 struct Icon: Codable {
-    let height: String?
     let url: String?
-    let width: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case url = "URL"
+        
+    }
 }

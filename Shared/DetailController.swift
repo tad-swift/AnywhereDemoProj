@@ -28,10 +28,13 @@ final class DetailController: UIViewController {
     
     private var imageOperation: BlockOperation?
     
-    init(title: String, cast: RelatedTopic?) {
+    var url: URL?
+    
+    init(title: String, cast: RelatedTopic?, url: URL?) {
         super.init(nibName: nil, bundle: nil)
         self.title = title
         self.cast = cast
+        self.url = url
     }
     
     required init?(coder: NSCoder) {
@@ -49,8 +52,15 @@ final class DetailController: UIViewController {
     }
     
     func setupUI() {
-        if let urlstring = cast?.icon?.url, let url = URL(string: urlstring) {
-            setupImageDownloadOperation(url: url)
+        
+        if let urlstring = cast?.icon?.url {
+            downloadImage(url: URL(string: "https://api.duckduckgo.com/?q=the+wire+characters&format=json\(urlstring)")!) { image in
+                if let image {
+                    DispatchQueue.main.async {
+                        self.imageView.image = image
+                    }
+                }
+            }
         }
         view.backgroundColor = .white
         textView.text = cast?.text ?? ""
@@ -68,25 +78,9 @@ final class DetailController: UIViewController {
         ])
     }
     
-    func setupImageDownloadOperation(url: URL) {
-        imageOperation?.cancel()
-        imageOperation = BlockOperation()
-        imageOperation?.qualityOfService = .utility
-        imageOperation?.addExecutionBlock { [weak self] in
-            guard let self else { return }
-            self.downloadImage(url: url) { image in
-                if let image {
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }
-            }
-        }
-        imageOperation?.start()
-    }
-    
     func downloadImage(url: URL, completion: @escaping (UIImage?) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
+            print(response)
             if let data {
                 completion(UIImage(data: data))
             } else {
